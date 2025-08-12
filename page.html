@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Starter Template – Off-Canvas + Alternating Cards</title>
+  <meta name="description" content="A clean, responsive HTML starter with a closeable burger side panel, centered main content, alternating image/text cards, and a contact footer." />
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #111318;
+      --card: #151922;
+      --text: #e6e7eb;
+      --muted: #a8afc1;
+      --brand: #7c5cff;
+      --brand-2: #3dd6ed;
+      --border: rgba(255,255,255,0.08);
+      --ring: rgba(124,92,255,0.45);
+      --shadow: 0 10px 28px rgba(0,0,0,0.35);
+      --radius: 16px;
+      --maxw: 1100px;
+    }@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f7fb;
+    --panel: #ffffff;
+    --card: #ffffff;
+    --text: #16181d;
+    --muted: #4b5565;
+    --border: rgba(0,0,0,0.08);
+    --ring: rgba(124,92,255,0.35);
+    --shadow: 0 10px 22px rgba(0,0,0,0.08);
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background: linear-gradient(180deg, var(--bg), #0d0f14 40%);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+a { color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: saturate(140%) blur(8px);
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.container { max-width: var(--maxw); margin: 0 auto; padding: 16px; }
+
+.nav {
+  display: flex; align-items: center; gap: 12px; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.3px;
+}
+.logo {
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+.burger {
+  appearance: none; border: 0; background: transparent; color: var(--text);
+  width: 44px; height: 44px; border-radius: 12px; display: inline-grid; place-items: center; cursor: pointer;
+}
+.burger:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+.burger:hover { background: var(--border); }
+.burger .lines { width: 22px; height: 2px; background: currentColor; position: relative; border-radius: 2px; }
+.burger .lines::before, .burger .lines::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 2px; background: currentColor; border-radius: 2px;
+}
+.burger .lines::before { top: -6px; }
+.burger .lines::after { top: 6px; }
+
+/* Off-canvas panel */
+.drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; visibility: hidden; transition: opacity 200ms ease, visibility 200ms ease; z-index: 40;
+}
+.drawer { position: fixed; inset: 0 auto 0 0; width: min(88vw, 320px); background: var(--panel); border-right: 1px solid var(--border);
+  transform: translateX(-100%); transition: transform 260ms cubic-bezier(.2,.7,.2,1); z-index: 41; box-shadow: var(--shadow);
+}
+.drawer header { position: sticky; top: 0; background: var(--panel); border-bottom: 1px solid var(--border); }
+.drawer-content { display: grid; gap: 8px; padding: 16px; }
+.drawer a.btn { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--panel), #000 4%);
+  text-decoration: none; color: var(--text); font-weight: 600;
+}
+.drawer a.btn:hover { background: color-mix(in oklab, var(--panel), #000 8%); }
+
+.drawer.open { transform: translateX(0); }
+.drawer-overlay.show { opacity: 1; visibility: visible; }
+
+/* Hero / main section */
+.hero { padding: 64px 16px 32px; }
+.hero-inner { max-width: var(--maxw); margin: 0 auto; display: grid; gap: 16px; text-align: center; }
+.eyebrow { color: var(--muted); font-weight: 700; letter-spacing: .2em; text-transform: uppercase; font-size: .78rem; }
+h1 { margin: 0; font-size: clamp(2rem, 3.5vw + 1rem, 3rem); line-height: 1.15; }
+.lead { max-width: 72ch; margin: 0 auto; color: var(--muted); }
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
+.cta { padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, color-mix(in oklab, var(--brand) 18%, transparent), color-mix(in oklab, var(--brand-2) 14%, transparent));
+  color: var(--text); font-weight: 700; text-decoration: none; }
+.cta:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+
+/* Cards */
+.cards { padding: 24px 16px 64px; }
+.cards-inner { max-width: var(--maxw); margin: 0 auto; display: grid; gap: 28px; }
+
+.card { display: grid; gap: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: clip; box-shadow: var(--shadow);
+  padding: 16px; align-items: center;
+}
+.card-media { aspect-ratio: 16/10; border-radius: 12px; overflow: clip; }
+.card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-body { display: grid; gap: 8px; }
+.card h3 { margin: 0; font-size: 1.3rem; }
+.card p { margin: 0; color: var(--muted); }
+
+/* Alternating layout on >= 900px */
+@media (min-width: 900px) {
+  .card { grid-template-columns: 1fr 1.2fr; padding: 20px; }
+  .card:nth-child(even) { grid-template-columns: 1.2fr 1fr; }
+  .card:nth-child(even) .card-media { order: 2; }
+  .card:nth-child(even) .card-body { order: 1; padding-right: 8px; }
+  .card:nth-child(odd) .card-body { padding-left: 8px; }
+}
+
+/* Contact footer */
+footer { border-top: 1px solid var(--border); background: color-mix(in oklab, var(--panel), #000 2%); }
+.footer-inner { max-width: var(--maxw); margin: 0 auto; padding: 40px 16px; display: grid; gap: 18px; }
+
+.grid-2 { display: grid; gap: 16px; }
+@media (min-width: 800px) { .grid-2 { grid-template-columns: 1.2fr 1fr; } }
+
+form { display: grid; gap: 12px; }
+label { font-weight: 600; }
+input, textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--panel), #000 3%); color: var(--text); }
+input:focus-visible, textarea:focus-visible { outline: 3px solid var(--ring); }
+textarea { min-height: 120px; resize: vertical; }
+
+.btn-primary { align-self: start; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: white; font-weight: 800; cursor: pointer; }
+.btn-primary:hover { filter: brightness(1.05); }
+
+.muted { color: var(--muted); }
+.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .drawer, .drawer-overlay { transition: none !important; }
+}
+
+/* Utility */
+.no-scroll { overflow: hidden; }
+
+  </style>
+</head>
+<body>
+  <!-- Off-canvas side panel -->
+  <div class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawer-label" role="dialog">
+    <header>
+      <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div id="drawer-label" class="brand"><span class="logo" aria-hidden="true"></span> Menu</div>
+        <button class="burger" type="button" id="closeDrawer" aria-label="Close menu">
+          <span class="lines" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+    <div class="drawer-content" role="menu">
+      <a class="btn" href="#about" role="menuitem">About</a>
+      <a class="btn" href="#features" role="menuitem">Features</a>
+      <a class="btn" href="#work" role="menuitem">Work</a>
+      <a class="btn" href="#contact" role="menuitem">Contact</a>
+    </div>
+  </div>
+  <div class="drawer-overlay" id="drawerOverlay" tabindex="-1" aria-hidden="true"></div>  <!-- Top bar -->  <header>
+    <div class="container nav">
+      <div class="brand"><span class="logo" aria-hidden="true"></span> YourBrand</div>
+      <nav class="desktop" aria-label="Primary" style="display:none"></nav>
+      <button class="burger" aria-expanded="false" aria-controls="drawer" aria-label="Open menu" id="openDrawer">
+        <span class="lines" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>  <main id="main">
+    <!-- Centered main information section -->
+    <section class="hero" id="about">
+      <div class="hero-inner">
+        <div class="eyebrow">Welcome</div>
+        <h1>Clean, accessible starter template</h1>
+        <p class="lead">A modern baseline with an off-canvas side panel, a centered hero section, and alternating image/text cards that feel at home on mobile and desktop. Zero dependencies—just HTML, CSS, and a sprinkle of JS.</p>
+        <div class="cta-row">
+          <a class="cta" href="#features">Explore Features</a>
+          <a class="cta" href="#contact">Contact Us</a>
+        </div>
+      </div>
+    </section><!-- Alternating cards -->
+<section class="cards" id="features" aria-label="Highlights">
+  <div class="cards-inner">
+    
+    <article class="card">
+      <div class="card-media">
+        <img alt="Abstract gradient placeholder"
+             src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%237c5cff'/><stop offset='100%' stop-color='%233dd6ed'/></linearGradient></defs><rect width='100%' height='100%' fill='url(%23g)'/><circle cx='30%' cy='35%' r='220' fill='rgba(255,255,255,0.22)'/><circle cx='75%' cy='65%' r='260' fill='rgba(0,0,0,0.14)'/></svg>"/>
+      </div>
+      <div class="card-body">
+        <h3>Off-canvas Navigation</h3>
+        <p>Tap the burger to reveal a tidy side panel of buttons. It’s keyboard- and screen reader-friendly, closes on overlay click or <kbd>Esc</kbd>, and restores focus to the trigger.</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-media">
+        <img alt="Code on a screen placeholder"
+             src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000'><rect width='100%' height='100%' fill='%23151922'/><g font-family='monospace' font-size='42' fill='%23e6e7eb'><text x='60' y='160'>.card { display: grid; }</text><text x='60' y='230'>.drawer { transform: translateX(-100%); }</text><text x='60' y='300'>@media (min-width: 900px) { /* alternate */ }</text></g></svg>"/>
+      </div>
+      <div class="card-body">
+        <h3>Alternating Cards</h3>
+        <p>Cards automatically alternate image/text alignment on larger screens via <code>:nth-child</code>—no extra classes required. On mobile they stack gracefully.</p>
+      </div>
+    </article>
+
+    <article class="card" id="work">
+      <div class="card-media">
+        <img alt="Contact icons placeholder"
+             src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000'><rect width='100%' height='100%' fill='%230b0c10'/><g fill='%233dd6ed'><circle cx='240' cy='240' r='120'/><circle cx='800' cy='500' r='120'/><circle cx='1240' cy='300' r='120'/></g><g fill='%237c5cff' opacity='0.8'><rect x='380' y='180' width='160' height='160' rx='32'/><rect x='960' y='420' width='160' height='160' rx='32'/><rect x='1340' y='180' width='160' height='160' rx='32'/></g></svg>"/>
+      </div>
+      <div class="card-body">
+        <h3>Accessible, Modern, Lightweight</h3>
+        <p>Thoughtful focus states, color contrast, reduced-motion support, and no external libraries—so you can drop this into any project and customize quickly.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+  </main>  <!-- Contact footer -->  <footer id="contact" aria-labelledby="contact-heading">
+    <div class="footer-inner grid-2">
+      <div>
+        <h2 id="contact-heading">Get in touch</h2>
+        <p class="muted">Have questions or want to work together? Drop a line and we’ll get back to you.</p>
+        <div style="margin-top:12px; display:grid; gap:6px;">
+          <div>📧 <a href="mailto:hello@example.com">hello@example.com</a></div>
+          <div>📍 Boise, Idaho</div>
+          <div>🐦 <a href="#">@yourhandle</a></div>
+        </div>
+      </div><form action="#" method="post" onsubmit="event.preventDefault(); alert('Form submitted! (demo)');">
+    <div>
+      <label for="name">Name</label>
+      <input id="name" name="name" autocomplete="name" required />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" required />
+    </div>
+    <div>
+      <label for="message">Message</label>
+      <textarea id="message" name="message" placeholder="Tell us a bit about your project…"></textarea>
+    </div>
+    <button class="btn-primary" type="submit">Send Message</button>
+  </form>
+</div>
+
+  </footer>  <script>
+    (function(){
+      const openBtn = document.getElementById('openDrawer');
+      const closeBtn = document.getElementById('closeDrawer');
+      const drawer = document.getElementById('drawer');
+      const overlay = document.getElementById('drawerOverlay');
+      let lastFocus = null;
+
+      function openDrawer() {
+        lastFocus = document.activeElement;
+        drawer.classList.add('open');
+        overlay.classList.add('show');
+        drawer.setAttribute('aria-hidden', 'false');
+        openBtn.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('no-scroll');
+        // Move focus to first focusable element in drawer
+        const focusable = drawer.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable) focusable.focus();
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('show');
+        drawer.setAttribute('aria-hidden', 'true');
+        openBtn.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('no-scroll');
+        if (lastFocus) lastFocus.focus();
+      }
+
+      openBtn.addEventListener('click', openDrawer);
+      closeBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // Close drawer when clicking a menu link (for single-page behavior)
+      drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeDrawer()));
+
+      // Optional: Smooth scroll for in-page links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e){
+          const id = this.getAttribute('href').slice(1);
+          const target = document.getElementById(id);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.replaceState(null, '', '#' + id);
+          }
+        });
+      });
+    })();
+  </script></body>
+</html>
